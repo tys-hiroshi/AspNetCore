@@ -16,7 +16,7 @@
   <Target Name="GetTargetPath" Returns="$(TargetPath)" />
 
   <Target Name="PrepareForBuild">
-    <MakeDir Directories="$(IntermediateOutputPath);$(IntermediatePackageRoot)" />
+    <MakeDir Directories="$(IntermediateOutputPath)" />
 
     <Error Text="Currently only linux-x64 is supported by Rpm installers." Condition=" '$(TargetRuntimeIdentifier)' != 'linux-x64' " />
 
@@ -71,7 +71,7 @@
       <FpmArgs Include="--license;$(PackageLicenseType)" />
       <FpmArgs Include="--url;$(PackageProjectUrl)" />
       <FpmArgs Include="--directories;%(InstallerOwnedDirectory.Identity)" Condition=" '%(InstallerOwnedDirectory.Identity)' != '' " />
-      <FpmArgs Include="$(IntermediatePackageRoot)=$(RpmPackageInstallRoot)" />
+      <FpmArgs Include="$(PackageContentRoot)=$(RpmPackageInstallRoot)" />
     </ItemGroup>
 
     <Run FileName="fpm" Arguments="@(FpmArgs)" />

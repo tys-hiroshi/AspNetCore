@@ -44,12 +44,15 @@ This package is an internal implementation of the .NET Core SDK and is not meant
     <IsProjectReferenceProvider>false</IsProjectReferenceProvider>
 
     <PackageConflictManifestFileName>PackageOverrides.txt</PackageConflictManifestFileName>
-    <PackageConflictManifestPackagePath>data/</PackageConflictManifestPackagePath>
+    <ManifestsPackagePath>data/</ManifestsPackagePath>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- Note: do not add _TransitiveExternalAspNetCoreAppReference to this list. This is intentionally not listed as a direct package reference. -->
     <Reference Include="@(AspNetCoreAppReference);@(AspNetCoreAppReferenceAndPackage);@(ExternalAspNetCoreAppReference)" />
+
+    <!-- Enforce build order. Targeting pack needs to bundle information about the runtime. -->
+    <ProjectReference Include="..\src\Microsoft.AspNetCore.App.Runtime.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
@@ -92,7 +95,8 @@ This package is an internal implementation of the .NET Core SDK and is not meant
 
       <RefPackContent Include="@(AspNetCoreReferenceAssemblyPath)" PackagePath="$(RefAssemblyPackagePath)" />
       <RefPackContent Include="@(AspNetCoreReferenceDocXml)" PackagePath="$(RefAssemblyPackagePath)" />
-      <RefPackContent Include="$(TargetDir)$(PackageConflictManifestFileName)" PackagePath="$(PackageConflictManifestPackagePath)" />
+      <RefPackContent Include="$(TargetDir)$(PackageConflictManifestFileName)" PackagePath="$(ManifestsPackagePath)" />
+      <RefPackContent Include="$(PlatformManifestOutputPath)" PackagePath="$(ManifestsPackagePath)" />
 
       <_PackageFiles Include="@(RefPackContent)" />
     </ItemGroup>
