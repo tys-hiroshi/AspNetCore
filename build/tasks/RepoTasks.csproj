@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Remove="Internal.AspNetCore.Sdk" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="$(MicrosoftExtensionsDependencyModelPackageVersion)" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(BuildInstallers)' == 'true' AND '$(TargetOsName)' == 'win'">
