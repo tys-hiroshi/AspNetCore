@@ -21,7 +21,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Framework\ref\Microsoft.AspNetCore.App.Ref.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\..\Framework\ref\Microsoft.AspNetCore.App.Ref.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+    </ProjectReference>
 
     <InstallerOwnedDirectory Include="$(RpmPackageInstallRoot)packs/$(TargetingPackName)/" />
   </ItemGroup>

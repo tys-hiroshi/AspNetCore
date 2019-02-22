@@ -19,7 +19,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Framework\ref\Microsoft.AspNetCore.App.Ref.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\..\Framework\ref\Microsoft.AspNetCore.App.Ref.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+    </ProjectReference>
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
