@@ -11,7 +11,7 @@
 
   <!-- Output paths -->
   <PropertyGroup>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(TargetRuntimeIdentifier)\</IntermediateOutputPath>
+    <IntermediateOutputPath>$(IntermediateOutputPath)$(TargetRuntimeIdentifier)\</IntermediateOutputPath>
     <OutputPath>$(InstallersOutputPath)</OutputPath>
   </PropertyGroup>
 
