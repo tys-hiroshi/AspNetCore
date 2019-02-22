@@ -76,6 +76,7 @@
 
     <_CompilationOnlyReference Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="@(Reference->WithMetadataValue('NuGetPackageId','NETStandard.Library'))" />
 
+    <!-- TODO: remove Newtonsoft.Json from this list once https://github.com/aspnet/AspNetCore/issues/4260 is resolved -->
     <_InvalidReferenceToNonSharedFxAssembly Condition="'$(IsAspNetCoreApp)' == 'true'"
       Include="@(Reference)"
       Exclude="
@@ -85,7 +86,27 @@
         @(ExternalAspNetCoreAppReference);
         @(_CompilationOnlyReference);
         @(Reference->WithMetadataValue('IsSharedSource', 'true'))" />
-    <!-- TODO: remove Newtonsoft.Json from this list once https://github.com/aspnet/AspNetCore/issues/4260 is resolved -->
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsAspNetCoreApp)' != 'true'">
+    <_NotAspNetCoreApp
+      Include="@(Reference)"
+      Exclude="@(AspNetCoreAppReference)" />
+
+    <_InvalidReferenceToSharedFxOnlyAssembly
+      Include="@(Reference)"
+      Exclude="@(_NotAspNetCoreApp);@(AspNetCoreAppReferenceAndPackage);@(ExternalAspNetCoreAppReference)" />
+
+    <!-- TODO: actually use FrameworkReference between projects. https://github.com/aspnet/AspNetCore/issues/4257.
+         To workaround this, this marks all Reference's as PrivateAssets=all to suppress this dependency from ending up in nuspec. -->
+    <_InvalidReferenceToSharedFxOnlyAssembly Update="@(_InvalidReferenceToSharedFxOnlyAssembly)" PrivateAssets="All" />
+    <Reference Remove="@(_InvalidReferenceToSharedFxOnlyAssembly)" />
+    <Reference Include="@(_InvalidReferenceToSharedFxOnlyAssembly)" />
+    <_InvalidReferenceToSharedFxOnlyAssembly Remove="@(_InvalidReferenceToSharedFxOnlyAssembly)" />
+    <!-- end workaround -->
+  </ItemGroup>
+
+  <ItemGroup>
     <_OriginalReferences Include="@(Reference)" />
     <!--
       Turn Reference items into a ProjectReference when UseProjectReferences is true.
@@ -124,6 +145,11 @@
 
     <Error Condition="@(_InvalidReferenceToNonSharedFxAssembly->Count()) != 0"
            Text="Cannot reference &quot;%(_InvalidReferenceToNonSharedFxAssembly.Identity)&quot;. This dependency is not in the shared framework. See docs/SharedFramework.md for instructions on how to modify what is in the shared framework." />
+  </Target>
+
+  <Target Name="_WarnAboutRedundantRef" AfterTargets="ResolveFrameworkReferences">
+    <Warning Condition="@(FrameworkReference->WithMetadataValue('Identity', 'Microsoft.AspNetCore.App')->Count()) &gt; 1"
+             Text="Redundant &lt;FrameworkReference&gt;. If you have an explicit item in the project file, you might be able to remove it. Some SDKs, like Microsoft.NET.Sdk.Web, add this implicitly." />
   </Target>
 
   <!--
