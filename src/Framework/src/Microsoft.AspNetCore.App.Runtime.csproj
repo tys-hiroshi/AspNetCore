@@ -28,6 +28,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
     <SharedRuntimeSubPath>shared\$(SharedFxName)\$(SharedFxVersion)\</SharedRuntimeSubPath>
     <SharedFxLayoutTargetDir>$(SharedFrameworkLayoutRoot)$(SharedRuntimeSubPath)</SharedFxLayoutTargetDir>
     <RedistLayoutTargetDir>$(RedistSharedFrameworkLayoutRoot)$(SharedRuntimeSubPath)</RedistLayoutTargetDir>
+    <LocalInstallationOutputPath>$(LocalDotNetRoot)$(SharedRuntimeSubPath)</LocalInstallationOutputPath>
 
     <InternalArchiveOutputFileName>$(InternalInstallerBaseName)-$(PackageVersion)-$(TargetRuntimeIdentifier)$(ArchiveExtension)</InternalArchiveOutputFileName>
     <InternalArchiveOutputPath>$(InstallersOutputPath)$(InternalArchiveOutputFileName)</InternalArchiveOutputPath>
@@ -155,6 +156,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
       _BatchCopyToRedistLayout;
       _CreateInternalSharedFxArchive;
       _CreateRedistSharedFxArchive;
+      _InstallFrameworkIntoLocalDotNet;
     </CoreBuildDependsOn>
     <CrossGenDependsOn>
       ResolveReferences;
@@ -282,6 +284,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
     <CreateDirectory Include="$(CrossgenToolDir)" />
     <CreateDirectory Include="$(SharedFxLayoutTargetDir)" />
     <CreateDirectory Include="$(RedistLayoutTargetDir)" />
+    <CreateDirectory Include="$(LocalInstallationOutputPath)" />
   </ItemGroup>
 
   <Target Name="Crossgen" DependsOnTargets="$(CrossgenDependsOn)" />
@@ -388,6 +391,16 @@ This package is an internal implementation of the .NET Core SDK and is not meant
 
     <Copy SourceFiles="@(SharedFxContent)"
           DestinationFiles="@(SharedFxContent->'$(RedistLayoutTargetDir)%(FileName)%(Extension)')"
+          UseHardlinksIfPossible="true" />
+  </Target>
+
+  <!-- Required to workaround https://github.com/dotnet/core-setup/issues/4809. This copies the shared framework into the $reporoot/.dotnet folder so tests can run against the shared framework. -->
+  <Target Name="_InstallFrameworkIntoLocalDotNet"
+          Inputs="@(SharedFxContent)"
+          Outputs="@(SharedFxContent->'$(LocalInstallationOutputPath)%(FileName)%(Extension)')">
+
+    <Copy SourceFiles="@(SharedFxContent)"
+          DestinationFiles="@(SharedFxContent->'$(LocalInstallationOutputPath)%(FileName)%(Extension)')"
           UseHardlinksIfPossible="true" />
   </Target>
 
