@@ -70,7 +70,7 @@
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 
     <!-- These project types are disabled because the presence of a PackageReference causes issues for NuGet. -->
-    <DisableSourceLink Condition="'$(MSBuildProjectExtension)' == '.zipproj' OR '$(MSBuildProjectExtension)' == '.debproj' OR '$(MSBuildProjectExtension)' == '.rpmproj'">true</DisableSourceLink>
+    <DisableSourceLink Condition="'$(MSBuildProjectExtension)' == '.debproj' OR '$(MSBuildProjectExtension)' == '.rpmproj'">true</DisableSourceLink>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(DisableSourceLink)' != 'true'">
