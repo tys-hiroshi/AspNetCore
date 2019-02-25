@@ -41,8 +41,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ref\Microsoft.AspNetCore.App.Ref.csproj" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\src\Microsoft.AspNetCore.App.Runtime.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\ref\Microsoft.AspNetCore.App.Ref.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+    </ProjectReference>
+    <ProjectReference Include="..\src\Microsoft.AspNetCore.App.Runtime.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+    </ProjectReference>
   </ItemGroup>
 
   <Target Name="GenerateTestData" BeforeTargets="GetAssemblyAttributes" DependsOnTargets="InitializeSourceControlInformation">

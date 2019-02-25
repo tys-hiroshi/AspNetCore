@@ -56,7 +56,10 @@ This package is an internal implementation of the .NET Core SDK and is not meant
     <Reference Include="@(AspNetCoreAppReference);@(AspNetCoreAppReferenceAndPackage);@(ExternalAspNetCoreAppReference)" />
 
     <!-- Enforce build order. Targeting pack needs to bundle information about the runtime. -->
-    <ProjectReference Include="..\src\Microsoft.AspNetCore.App.Runtime.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\src\Microsoft.AspNetCore.App.Runtime.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+    </ProjectReference>
   </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
