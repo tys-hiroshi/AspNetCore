@@ -36,7 +36,7 @@ execute(){
 parse_args_and_set_env_vars(){
     OPTIND=1 # Reset in case getopts has been used previously in the shell.
 
-    while getopts ":n:v:i:o:h:C" opt; do
+    while getopts ":n:v:i:o:h:C:" opt; do
       case $opt in
         n)
           export PACKAGE_NAME="$OPTARG"
