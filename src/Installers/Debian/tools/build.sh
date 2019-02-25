@@ -82,6 +82,7 @@ print_help(){
 
     REQUIRED:
         -i <INPUT_DIR>: Input directory conforming to package_tool conventions and debian_config.json
+        -C <CONTENT_DIR>: Directory containing the files which should be packaged.
         -o <OUTPUT_DIR>: Output directory for debian package and other artifacts
 
     OPTIONAL:
@@ -107,9 +108,11 @@ validate_inputs(){
         ret=1
     fi
 
-    if [[ ! -d "$PACKAGE_ROOT_PLACEMENT_DIR" ]]; then
-        echo "ERROR: package_root directory does not exist"
-        echo $PACKAGE_ROOT_PLACEMENT_DIR
+    if [[ -z "$CONTENT_DIR" ]]; then
+        echo "ERROR: -C <CONTENT_DIR> Not Specified."
+        ret=1
+    elif [[ ! -d "$PACKAGE_ROOT_PLACEMENT_DIR" ]]; then
+        echo "ERROR: '$PACKAGE_ROOT_PLACEMENT_DIR' directory does not exist"
         ret=1
     fi
 
