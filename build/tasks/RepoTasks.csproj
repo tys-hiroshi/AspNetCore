@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Remove="Internal.AspNetCore.Sdk" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
+    <PackageReference Include="Yarn.MSBuild" Version="1.13.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(BuildInstallers)' == 'true' AND '$(TargetOsName)' == 'win'">
