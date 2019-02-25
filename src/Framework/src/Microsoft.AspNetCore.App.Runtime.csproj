@@ -381,6 +381,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
     <Copy SourceFiles="@(SharedFxContent)"
           DestinationFiles="@(SharedFxContent->'$(SharedFxLayoutTargetDir)%(FileName)%(Extension)')"
           UseHardlinksIfPossible="true" />
+    <Message Importance="High" Text="$(MSbuildProjectFile) -> $(SharedFxLayoutTargetDir)" />
   </Target>
 
   <!-- Written to take advantage of target batching in MSBuild. -->
@@ -392,6 +393,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
     <Copy SourceFiles="@(SharedFxContent)"
           DestinationFiles="@(SharedFxContent->'$(RedistLayoutTargetDir)%(FileName)%(Extension)')"
           UseHardlinksIfPossible="true" />
+    <Message Importance="High" Text="$(MSbuildProjectFile) -> $(RedistLayoutTargetDir)" />
   </Target>
 
   <!-- Required to workaround https://github.com/dotnet/core-setup/issues/4809. This copies the shared framework into the $reporoot/.dotnet folder so tests can run against the shared framework. -->
@@ -402,6 +404,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
     <Copy SourceFiles="@(SharedFxContent)"
           DestinationFiles="@(SharedFxContent->'$(LocalInstallationOutputPath)%(FileName)%(Extension)')"
           UseHardlinksIfPossible="true" />
+    <Message Importance="High" Text="$(MSbuildProjectFile) -> $(LocalInstallationOutputPath)" />
   </Target>
 
   <Target Name="_CreateInternalSharedFxArchive"

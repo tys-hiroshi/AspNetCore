@@ -25,7 +25,10 @@ This package is an internal implementation of the .NET Core SDK and is not meant
     <PackageType>DotnetPlatform</PackageType>
     <RefAssemblyPackagePath>ref/$(TargetFramework)/</RefAssemblyPackagePath>
 
-    <LayoutTargetDir>$(TargetingPackLayoutRoot)packs/Microsoft.AspNetCore.App.Ref/$(PackageVersion)/</LayoutTargetDir>
+    <TargetingPackSubPath>packs\Microsoft.AspNetCore.App.Ref\$(PackageVersion)\</TargetingPackSubPath>
+    <LayoutTargetDir>$(TargetingPackLayoutRoot)$(TargetingPackSubPath)</LayoutTargetDir>
+    <LocalInstallationOutputPath>$(LocalDotNetRoot)$(TargetingPackSubPath)</LocalInstallationOutputPath>
+
     <ArchiveOutputFileName Condition="'$(TargetRuntimeIdentifier)' == 'win-x64'">aspnetcore-targeting-pack-$(PackageVersion).zip</ArchiveOutputFileName>
     <ArchiveOutputFileName Condition="'$(TargetRuntimeIdentifier)' == 'linux-x64'">aspnetcore-targeting-pack-$(PackageVersion).tar.gz</ArchiveOutputFileName>
     <ArchiveOutputPath>$(InstallersOutputPath)$(ArchiveOutputFileName)</ArchiveOutputPath>
@@ -71,6 +74,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
       GeneratePackageConflictManifest;
       _ResolveTargetingPackContent;
       _BatchCopyToLayoutTargetDir;
+      _InstallTargetingPackIntoLocalDotNet;
       _CreateTargetingPackArchive;
     </BuildDependsOn>
   </PropertyGroup>
@@ -130,6 +134,21 @@ This package is an internal implementation of the .NET Core SDK and is not meant
           DestinationFiles="@(RefPackContent->'$(LayoutTargetDir)%(PackagePath)%(FileName)%(Extension)')"
           UseHardlinksIfPossible="true" />
     <Message Importance="High" Text="$(MSBuildProjectName) -> $(LayoutTargetDir)" />
+  </Target>
+
+  <ItemGroup>
+    <CreateDirectory Include="$(LocalInstallationOutputPath)" />
+  </ItemGroup>
+
+  <!-- Workaround https://github.com/dotnet/sdk/issues/2910 by copying targeting pack into local installation. -->
+  <Target Name="_InstallTargetingPackIntoLocalDotNet"
+          DependsOnTargets="_ResolveTargetingPackContent"
+          Inputs="@(RefPackContent)"
+          Outputs="@(RefPackContent->'$(LocalInstallationOutputPath)%(PackagePath)%(FileName)%(Extension)')">
+    <Copy SourceFiles="@(RefPackContent)"
+          DestinationFiles="@(RefPackContent->'$(LocalInstallationOutputPath)%(PackagePath)%(FileName)%(Extension)')"
+          UseHardlinksIfPossible="true" />
+    <Message Importance="High" Text="$(MSBuildProjectName) -> $(LocalInstallationOutputPath)" />
   </Target>
 
   <Target Name="_CreateTargetingPackArchive"
