@@ -126,8 +126,12 @@ This package is an internal implementation of the .NET Core SDK and is not meant
     <ProjectReference Condition="'$(BuildIisNativeProjects)' == 'true' AND '$(BuildNative)' != 'false'" Include="$(RepositoryRoot)src\Servers\IIS\AspNetCoreModuleV2\InProcessRequestHandler\InProcessRequestHandler.vcxproj">
       <SetPlatform>Platform=$(TargetArchitecture)</SetPlatform>
       <SetPlatform Condition="'$(TargetArchitecture)' == 'x86'">Platform=Win32</SetPlatform>
+      <!-- Custom attribute used to distinguish managed from native references. -->
       <IsNativeImage>true</IsNativeImage>
+      <!-- A custom item group to be used in targets later.  -->
       <OutputItemType>_ResolvedNativeProjectReferencePaths</OutputItemType>
+      <!-- C++ projects don't invoke GetTargetPath by default when building. -->
+      <Targets>Build;GetTargetPath</Targets>
     </ProjectReference>
   </ItemGroup>
 
