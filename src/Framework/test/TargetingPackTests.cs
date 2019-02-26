@@ -53,13 +53,7 @@ namespace Microsoft.AspNetCore
                 .ToHashSet();
 
             var missing = expectedAssemblies.Except(actualAssemblies);
-            var unexpected = actualAssemblies.Except(expectedAssemblies)
-                .Where(s => !string.Equals(s, "aspnetcorev2_inprocess", StringComparison.Ordinal)); // this native assembly only appears in Windows builds.
-
-            if (_expectedRid.StartsWith("win", StringComparison.Ordinal) && !_expectedRid.Contains("arm"))
-            {
-                Assert.Contains("aspnetcorev2_inprocess", actualAssemblies);
-            }
+            var unexpected = actualAssemblies.Except(expectedAssemblies);
 
             _output.WriteLine("==== missing assemblies from the manifest ====");
             _output.WriteLine(string.Join('\n', missing));
